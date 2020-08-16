@@ -1,0 +1,23 @@
+{
+    "name": "BugReport",
+    "alignment": "left",
+    "priority": 100,
+    "Wait": {
+        "command": "extension.BugReport",
+        "text": "$(beaker) Bug Report",
+        "color": "errorForeground",
+        "show": true
+    },
+    "Load": {
+        "command": "extension.BugReport",
+        "text": "$(sync~spin) LOADING...",
+        "color": "inputValidation.warningBackground",
+        "show": true
+    },
+    "Ready": {
+        "command": "extension.BugReport",
+        "text": "$(verified) Bug Report",
+        "color": "activityBar.activeBorder",
+        "show": true
+    }
+}
