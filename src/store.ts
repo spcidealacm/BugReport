@@ -1,11 +1,19 @@
 import * as vscode from "vscode";
 import { BugReportBar } from "./models/BugReportBar";
 import { BugReportCommand } from "./models/BugReportCommand";
+import { BugReportWeb } from "./models/BugReportWeb";
 
 class Store {
     private static _context: vscode.ExtensionContext;
     private static _bar: BugReportBar;
     private static _command: BugReportCommand;
+    private static _web: BugReportWeb;
+    public static get web(): BugReportWeb {
+        return Store._web;
+    }
+    public static set web(value: BugReportWeb) {
+        Store._web = value;
+    }
     public static get command(): BugReportCommand {
         return Store._command;
     }
@@ -32,4 +40,4 @@ function initial(context: vscode.ExtensionContext) {
     Store.command = new BugReportCommand();
 }
 
-export { Store , initial};
+export { Store, initial };

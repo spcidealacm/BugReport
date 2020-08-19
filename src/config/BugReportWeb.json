@@ -1,0 +1,9 @@
+{
+    "viewType": "bug_report",
+    "title": "Bug Analysis Report",
+    "column": -1,
+    "enableScripts": true,
+    "localResourceRoots": ["src/web"],
+    "retainContextWhenHidden": true,
+    "htmlRelativePath": "./src/web/index.html"
+}

@@ -50,6 +50,7 @@ class WebPanel {
         );
 
         this.setWebpage(webPanel, webInfo["htmlRelativePath"], context);
+        console.log(localResourceRoots);
         this.setCleanupMethod(webPanel);
         this.setListener(webPanel);
 
@@ -96,6 +97,12 @@ class WebPanel {
             null,
             this.disposables
         );
+    }
+    /**
+     * For public delete panel.
+     */
+    public delete() {
+        this.webPanel.dispose();
     }
     /**
      * Vscode could listen webpage message.
@@ -155,7 +162,9 @@ class WebPanel {
         const resourcePath = path.join(context.extensionPath, relativePath);
         const dirPath = path.dirname(resourcePath);
         const dirName = dirPath.replace(context.extensionPath, "");
+        console.log(resourcePath);
         let html = fs.readFileSync(resourcePath, "utf-8");
+        console.log(2);
         html = html.replace(
             /(<link.+?href="|<script.+?src="|<img.+?src="|import.+?from ")(.+?)"/g,
             (m, $1, $2) => {

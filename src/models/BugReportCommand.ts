@@ -3,6 +3,7 @@ import * as bugInfo from "../config/BugReportBar.json";
 import { Command } from "../components/command";
 import { Store } from "../store";
 import { BarStatus } from "../models/BugReportBar";
+import { BugReportWeb } from "../models/BugReportWeb";
 
 function sleep(seconds: number) {
     return new Promise((resolve) => {
@@ -15,16 +16,6 @@ class MyEvent {
     static WaitTime = 5;
     static events = require("events");
     static eventEmitter = new MyEvent.events.EventEmitter();
-    static webReady = false;
-    static GenWeb() {
-        return setTimeout(() => {
-            vscode.window.showInformationMessage("Web Generate");
-            MyEvent.webReady = true;
-        }, MyEvent.GenWebTime * 1000);
-    }
-    static CleanWeb() {
-        MyEvent.webReady = false;
-    }
 }
 
 class BugReportCommand extends Command {
@@ -50,29 +41,26 @@ class BugReportCommand extends Command {
 
     protected wait(seconds: number) {
         Store.bar.load(); //Run from wait mode will put status into load mode first. then wait for work finish.
-        MyEvent.webReady = false;
+        new BugReportWeb();
         return new Promise((resolve, reject) => {
-            let handleWeb = MyEvent.GenWeb();
             let num = 0;
             let handle: NodeJS.Timeout = setInterval(() => {
-                if (MyEvent.webReady) {
+                if (Store.web.isReady()) {
                     clearInterval(handle);
                     Store.bar.ready();
                 } else if (num === seconds * 10) {
                     vscode.window.showInformationMessage("Time Out");
-                    MyEvent.CleanWeb();
+                    Store.web.delete();
                     clearInterval(handle);
-                    clearInterval(handleWeb);
                     Store.bar.wait();
                 }
                 num++;
             }, 100);
 
             MyEvent.eventEmitter.addListener("exit", () => {
-                vscode.window.showInformationMessage("Work cancel.");
-                MyEvent.CleanWeb();
+                vscode.window.showInformationMessage("Work Cancel.");
+                Store.web.delete();
                 clearInterval(handle);
-                clearInterval(handleWeb);
                 reject();
             });
         });
@@ -95,6 +83,7 @@ class BugReportCommand extends Command {
     protected ready() {
         vscode.window.showInformationMessage("Return to wait");
         Store.bar.wait();
+        Store.web.delete();
     }
 
     protected default() {
