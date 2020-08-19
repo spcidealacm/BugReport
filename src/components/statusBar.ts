@@ -1,27 +1,29 @@
 import * as vscode from "vscode";
 
 class Bar {
-    private bar: vscode.StatusBarItem;
-    constructor(alignment?: vscode.StatusBarAlignment, priority?: number) {
+    protected readonly bar: vscode.StatusBarItem;
+    constructor(
+        context: vscode.ExtensionContext,
+        alignment?: vscode.StatusBarAlignment,
+        priority?: number
+    ) {
         this.bar = vscode.window.createStatusBarItem(alignment, priority);
+        context.subscriptions.push(this.bar);
     }
 
-    public setBar(
+    protected setBar(
         command: string | vscode.Command | undefined,
         text: string,
-        color: string | vscode.ThemeColor | undefined,
+        color: string,
         show?: boolean
     ) {
         this.bar.command = command;
         this.bar.text = text;
-        this.bar.color = color;
-        if(show === false){
+        this.bar.color = new vscode.ThemeColor(color);
+        this.bar.show();
+        if (show === false) {
             this.bar.hide();
         }
-    }
-
-    public active(context: vscode.ExtensionContext) {
-        context.subscriptions.push(this.bar);
     }
 }
 
