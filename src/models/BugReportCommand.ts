@@ -81,7 +81,6 @@ class BugReportCommand extends Command {
     }
 
     protected ready() {
-        vscode.window.showInformationMessage("Return to wait");
         Store.bar.wait();
         Store.web.delete();
     }
