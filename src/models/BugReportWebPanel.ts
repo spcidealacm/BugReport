@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
 import * as webInfo from "../config/BugReportWeb.json";
-import { Store } from "../store";
-import { WebPanel } from "../components/webpanel";
+import { StoreInfo } from "../storeInfo";
+import { WebBasicPanel } from "../components/webpanel";
 
-class BugReportWeb extends WebPanel {
+class BugReportWebPanel extends WebBasicPanel {
     constructor() {
-        super(webInfo, Store.context);
-        Store.web = this;
+        super(webInfo, StoreInfo.extensionContext);
+        StoreInfo.bugReportWebPanel = this;
     }
 
     protected receiveMessage(message: { command: string; text: string }) {
@@ -17,7 +17,7 @@ class BugReportWeb extends WebPanel {
                 this.setWebpage(
                     this.webPanel,
                     webInfo["fileRelativePath"],
-                    Store.context
+                    StoreInfo.extensionContext
                 );
                 break;
 
@@ -26,14 +26,14 @@ class BugReportWeb extends WebPanel {
         }
     }
 
-    protected dispose(
+    protected disposeJob(
         webPanel: vscode.WebviewPanel,
         disposables: vscode.Disposable[],
         webIsReady: boolean
     ) {
-        super.dispose(webPanel, disposables, webIsReady);
-        Store.bar.wait();
+        super.disposeJob(webPanel, disposables, webIsReady);
+        StoreInfo.bugReportBar.setWait();
     }
 }
 
-export { BugReportWeb };
+export { BugReportWebPanel };

@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 import * as bugInfo from "../config/BugReportBar.json";
-import { Command } from "../components/command";
-import { Store } from "../store";
+import { BasicCommand } from "../components/command";
+import { StoreInfo } from "../storeInfo";
 import { BarStatus } from "../models/BugReportBar";
-import { BugReportWeb } from "../models/BugReportWeb";
+import { BugReportWebPanel } from "../models/BugReportWebPanel";
 
 function sleep(seconds: number) {
     return new Promise((resolve) => {
@@ -18,20 +18,20 @@ class MyEvent {
     static eventEmitter = new MyEvent.events.EventEmitter();
 }
 
-class BugReportCommand extends Command {
+class BugReportCommand extends BasicCommand {
     constructor() {
-        super(Store.context, bugInfo.command);
+        super(StoreInfo.extensionContext, bugInfo.command);
     }
-    protected command() {
-        switch (Store.bar.status) {
+    protected exeCommand() {
+        switch (StoreInfo.bugReportBar.status) {
             case BarStatus.wait: // Run Bug Report command from wait status.
-                this.wait(MyEvent.WaitTime);
+                this.runWhenWait(MyEvent.WaitTime);
                 break;
             case BarStatus.load: // Run Bug Report command from load status.
-                this.load();
+                this.runWhenLoad();
                 break;
             case BarStatus.ready: // Run Bug Report command from ready status.
-                this.ready();
+                this.runWhenReady();
                 break;
             default:
                 this.default();
@@ -39,66 +39,66 @@ class BugReportCommand extends Command {
         }
     }
 
-    protected prepare(): boolean {
+    protected prepareJob(): boolean {
         if (!vscode.workspace.rootPath) {
             return false;
         }
         return true;
     }
 
-    protected wait(seconds: number) {
-        if (!this.prepare()) {
+    protected runWhenWait(seconds: number) {
+        if (!this.prepareJob()) {
             vscode.window.showErrorMessage("Please open a folder.");
             return;
         }
-        Store.bar.load(); //Run from wait mode will put status into load mode first. then wait for work finish.
-        new BugReportWeb();
+        StoreInfo.bugReportBar.setLoad(); //Run from wait mode will put status into load mode first. then wait for work finish.
+        new BugReportWebPanel();
         return new Promise((resolve, reject) => {
             let num = 0;
             let handle: NodeJS.Timeout = setInterval(() => {
-                if (Store.web.isReady()) {
+                if (StoreInfo.bugReportWebPanel.isReady()) {
                     clearInterval(handle);
-                    Store.bar.ready();
+                    StoreInfo.bugReportBar.setReady();
                 } else if (num === seconds * 10) {
                     vscode.window.showInformationMessage("Time Out");
-                    Store.web.delete();
+                    StoreInfo.bugReportWebPanel.deletePanel();
                     clearInterval(handle);
-                    Store.bar.wait();
+                    StoreInfo.bugReportBar.setWait();
                 }
                 num++;
             }, 100);
 
             MyEvent.eventEmitter.addListener("exit", () => {
                 vscode.window.showInformationMessage("Work Cancel.");
-                Store.web.delete();
+                StoreInfo.bugReportWebPanel.deletePanel();
                 clearInterval(handle);
                 reject();
             });
         });
     }
 
-    protected load() {
+    protected runWhenLoad() {
         let promise = vscode.window.showInformationMessage(
             "Waiting for loading...",
             "WAIT LOAD",
             "CANCEL"
         );
         promise.then(function (result) {
-            if (Store.bar.isLoad() && result === "CANCEL") {
+            if (StoreInfo.bugReportBar.isLoad() && result === "CANCEL") {
                 MyEvent.eventEmitter.emit("exit");
-                Store.bar.wait();
+                StoreInfo.bugReportBar.setWait();
             }
         });
     }
 
-    protected ready() {
-        Store.bar.wait();
-        Store.web.delete();
+    protected runWhenReady() {
+        StoreInfo.bugReportBar.setWait();
+        StoreInfo.bugReportWebPanel.deletePanel();
     }
 
     protected default() {
         vscode.window.showErrorMessage("Error Bar status.");
-        Store.bar.wait();
+        StoreInfo.bugReportBar.setWait();
     }
 }
 

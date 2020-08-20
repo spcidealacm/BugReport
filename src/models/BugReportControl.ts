@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as webControl from "../config/BugReportControl.json";
 import * as fs from "fs";
 import * as path from "path";
-import { Store } from "../store";
+import { StoreInfo } from "../storeInfo";
 
 enum BugReportMode {
     WORK,
@@ -44,7 +44,7 @@ class BugReportControl {
                 break;
             case BugReportMode.TEST:
                 let testpath: string = path.join(
-                    Store.context.extensionPath,
+                    StoreInfo.extensionContext.extensionPath,
                     webControl["testFolder"],
                     webControl["fileName"]
                 );
@@ -61,7 +61,7 @@ class BugReportControl {
         }
         let filepath = this.isTest()
             ? path.join(
-                  Store.context.extensionPath,
+                  StoreInfo.extensionContext.extensionPath,
                   webControl["testFolder"],
                   filename
               )

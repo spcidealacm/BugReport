@@ -12,7 +12,7 @@ interface WebInfo {
     homeRelativePath: string;
 }
 
-class WebPanel {
+class WebBasicPanel {
     protected webPanel: vscode.WebviewPanel;
     protected disposables: vscode.Disposable[] = [];
     protected webIsReady: boolean = false;
@@ -80,7 +80,7 @@ class WebPanel {
      */
     protected setCleanupMethod(webPanel: vscode.WebviewPanel) {
         webPanel.onDidDispose(
-            () => this.dispose(webPanel, this.disposables, this.webIsReady),
+            () => this.disposeJob(webPanel, this.disposables, this.webIsReady),
             null,
             this.disposables
         );
@@ -91,7 +91,7 @@ class WebPanel {
      * @param disposables clean up space.
      * @param webIsReady web is ready or not.
      */
-    protected dispose(
+    protected disposeJob(
         webPanel: vscode.WebviewPanel,
         disposables: vscode.Disposable[],
         webIsReady: boolean
@@ -106,7 +106,7 @@ class WebPanel {
     /**
      * For public delete panel.
      */
-    public delete() {
+    public deletePanel() {
         this.webPanel.dispose();
     }
     /**
@@ -190,4 +190,4 @@ class WebPanel {
     }
 }
 
-export { WebInfo, WebPanel };
+export { WebInfo, WebBasicPanel };

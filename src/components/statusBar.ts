@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-class Bar {
+class BasicBar {
     protected readonly bar: vscode.StatusBarItem;
     constructor(
         context: vscode.ExtensionContext,
@@ -11,7 +11,7 @@ class Bar {
         context.subscriptions.push(this.bar);
     }
 
-    protected setBar(
+    protected setBasicBar(
         command: string | vscode.Command | undefined,
         text: string,
         color: string,
@@ -27,4 +27,4 @@ class Bar {
     }
 }
 
-export { Bar };
+export { BasicBar };

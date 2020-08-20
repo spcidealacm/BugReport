@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as bugInfo from "../config/BugReportBar.json";
 import * as statusbar from "../components/statusBar";
-import { Store } from "../store";
+import { StoreInfo } from "../storeInfo";
 
 enum BarStatus {
     wait,
@@ -17,16 +17,16 @@ function getAlignment(alignment?: string): vscode.StatusBarAlignment {
     }
 }
 
-class BugReportBar extends statusbar.Bar {
+class BugReportBar extends statusbar.BasicBar {
     protected _status: BarStatus;
     public get status(): BarStatus {
         return this._status;
     }
     constructor() {
-        // super(Store.context, getAlignment(bugInfo.alignment), bugInfo.priority);
-        super(Store.context);
+        // super(StoreInfo.context, getAlignment(bugInfo.alignment), bugInfo.priority);
+        super(StoreInfo.extensionContext);
         this._status = BarStatus.wait;
-        this.wait();
+        this.setWait();
     }
     protected setStatus(status: BarStatus) {
         this._status = status;
@@ -45,18 +45,18 @@ class BugReportBar extends statusbar.Bar {
                 obj = bugInfo.wait;
                 break;
         }
-        super.setBar(bugInfo.command, obj.text, obj.color, true);
+        super.setBasicBar(bugInfo.command, obj.text, obj.color, true);
     }
 
-    public wait() {
+    public setWait() {
         this.setStatus(BarStatus.wait);
     }
 
-    public load() {
+    public setLoad() {
         this.setStatus(BarStatus.load);
     }
 
-    public ready() {
+    public setReady() {
         this.setStatus(BarStatus.ready);
     }
 

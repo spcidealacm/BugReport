@@ -1,19 +1,19 @@
 import * as vscode from "vscode";
 
-class Command {
+class BasicCommand {
     constructor(private context: vscode.ExtensionContext, private cmd: string) {
-        this.register();
+        this.registerCommand();
     }
-    protected register() {
+    protected registerCommand() {
         let disposable: vscode.Disposable = vscode.commands.registerCommand(
             this.cmd,
             () => {
-                this.command();
+                this.exeCommand();
             }
         );
         this.context.subscriptions.push(disposable);
     }
-    protected command() {}
+    protected exeCommand() {}
 }
 
-export { Command };
+export { BasicCommand };
