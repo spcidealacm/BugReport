@@ -9,6 +9,10 @@
         "name": "Tianyang Guan",
         "email": "spcidealacm@gmail.com"
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/spcidealacm/BugReport.git"
+    },
     "engines": {
         "vscode": "^1.48.0"
     },
