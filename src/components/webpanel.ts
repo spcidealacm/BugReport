@@ -79,23 +79,30 @@ class WebPanel {
      * @param webPanel Webpanel.
      */
     protected setCleanupMethod(webPanel: vscode.WebviewPanel) {
-        function dispose(
-            webPanel: vscode.WebviewPanel,
-            disposables: vscode.Disposable[],
-            webIsReady: boolean
-        ) {
-            webPanel.dispose();
-            disposables.forEach((element) => {
-                element.dispose();
-            });
-            disposables = [];
-            webIsReady = false;
-        }
+        
         webPanel.onDidDispose(
-            () => dispose(webPanel, this.disposables, this.webIsReady),
+            () => this.dispose(webPanel, this.disposables, this.webIsReady),
             null,
             this.disposables
         );
+    }
+    /**
+     * It is clean up listener.
+     * @param webPanel Webpanel.
+     * @param disposables clean up space.
+     * @param webIsReady web is ready or not.
+     */
+    protected dispose(
+        webPanel: vscode.WebviewPanel,
+        disposables: vscode.Disposable[],
+        webIsReady: boolean
+    ) {
+        webPanel.dispose();
+        disposables.forEach((element) => {
+            element.dispose();
+        });
+        disposables = [];
+        webIsReady = false;
     }
     /**
      * For public delete panel.

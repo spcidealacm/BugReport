@@ -23,3 +23,10 @@ document.onreadystatechange = function () {
         });
     }
 };
+
+document.getElementById("fileclick").addEventListener("click", () => {
+    vscode.postMessage({
+        command: "fileclick",
+        text: "test",
+    });
+});

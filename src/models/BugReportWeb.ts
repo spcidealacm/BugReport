@@ -10,7 +10,29 @@ class BugReportWeb extends WebPanel {
     }
 
     protected receiveMessage(message: { command: string; text: string }) {
+        console.log(message);
         super.receiveMessage(message);
+        switch (message.command) {
+            case "fileclick":
+                this.setWebpage(
+                    this.webPanel,
+                    webInfo["fileRelativePath"],
+                    Store.context
+                );
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    protected dispose(
+        webPanel: vscode.WebviewPanel,
+        disposables: vscode.Disposable[],
+        webIsReady: boolean
+    ) {
+        super.dispose(webPanel, disposables, webIsReady);
+        Store.bar.wait();
     }
 }
 
