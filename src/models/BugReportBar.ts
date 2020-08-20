@@ -18,18 +18,18 @@ function getAlignment(alignment?: string): vscode.StatusBarAlignment {
 }
 
 class BugReportBar extends statusbar.BasicBar {
-    protected _status: BarStatus;
-    public get status(): BarStatus {
-        return this._status;
+    protected _barStatus: BarStatus;
+    public get barStatus(): BarStatus {
+        return this._barStatus;
     }
     constructor() {
         // super(StoreInfo.context, getAlignment(bugInfo.alignment), bugInfo.priority);
         super(StoreInfo.extensionContext);
-        this._status = BarStatus.wait;
+        this._barStatus = BarStatus.wait;
         this.setWait();
     }
     protected setStatus(status: BarStatus) {
-        this._status = status;
+        this._barStatus = status;
         let obj;
         switch (status) {
             case BarStatus.wait:
@@ -61,21 +61,21 @@ class BugReportBar extends statusbar.BasicBar {
     }
 
     public isWait(): boolean {
-        if (BarStatus.wait === this.status) {
+        if (BarStatus.wait === this.barStatus) {
             return true;
         }
         return false;
     }
 
     public isLoad(): boolean {
-        if (BarStatus.load === this.status) {
+        if (BarStatus.load === this.barStatus) {
             return true;
         }
         return false;
     }
 
     public isReady(): boolean {
-        if (BarStatus.ready === this.status) {
+        if (BarStatus.ready === this.barStatus) {
             return true;
         }
         return false;

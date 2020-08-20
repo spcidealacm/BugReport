@@ -23,7 +23,7 @@ class BugReportCommand extends BasicCommand {
         super(StoreInfo.extensionContext, bugInfo.command);
     }
     protected exeCommand() {
-        switch (StoreInfo.bugReportBar.status) {
+        switch (StoreInfo.bugReportBar.barStatus) {
             case BarStatus.wait: // Run Bug Report command from wait status.
                 this.runWhenWait(MyEvent.WaitTime);
                 break;
