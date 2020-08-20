@@ -1,8 +1,14 @@
 {
     "name": "bugreport",
     "displayName": "BugReport",
-    "description": "",
+    "description": "Analysis Online",
+    "icon": "img/icon.png",
     "version": "0.0.1",
+    "publisher": "TianyangGuan",
+    "author": {
+        "name": "Tianyang Guan",
+        "email": "spcidealacm@gmail.com"
+    },
     "engines": {
         "vscode": "^1.48.0"
     },
