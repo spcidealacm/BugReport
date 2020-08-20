@@ -39,7 +39,18 @@ class BugReportCommand extends Command {
         }
     }
 
+    protected prepare(): boolean {
+        if (!vscode.workspace.rootPath) {
+            return false;
+        }
+        return true;
+    }
+
     protected wait(seconds: number) {
+        if (!this.prepare()) {
+            vscode.window.showErrorMessage("Please open a folder.");
+            return;
+        }
         Store.bar.load(); //Run from wait mode will put status into load mode first. then wait for work finish.
         new BugReportWeb();
         return new Promise((resolve, reject) => {
