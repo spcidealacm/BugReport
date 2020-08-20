@@ -13,7 +13,7 @@
 
 <body>
   <div id="test">
-    <div>
+    <div class="invisible">
       <button>
         <a id="fileclick" href="./fileReport.html" target="_self">File Report</a>
       </button>
@@ -513,41 +513,6 @@
 
   <!-- Socket JS -->
   <script src="./socket.io/socket.io.js"></script>
-  
-  <script>
-    var socket = io();
-
-    $("#files-analysed .fileRepLink").click(function (event) {
-      event.preventDefault(); // prevent page reloading
-
-      socket.emit("file-clicked", $(this).attr("id"));
-
-      document.getElementById("fileclick").click();
-    });
-
-    $(".fileRepLink1").click(function (event) {
-      event.preventDefault();
-
-      var href1 = $(this).attr("href");
-
-      var href2 = $("#fileclick").attr("href");
-
-      $("#fileclick").attr("href", href2 + href1);
-
-      socket.emit(
-        "file-clicked",
-        $(this)
-          .closest(".tabBody")
-          .children()
-          .find(".fileRepLink")
-          .attr("id")
-      );
-
-      document.getElementById("fileclick").click();
-
-      $("#fileclick").attr("href", href2);
-    });
-  </script>
   <script src="./js/index.js"></script>
 </body>
 

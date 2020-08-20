@@ -3,8 +3,8 @@
     "title": "Bug Analysis Report",
     "column": -1,
     "enableScripts": true,
-    "localResourceRoots": ["src/public"],
+    "localResourceRoots": ["public"],
     "retainContextWhenHidden": true,
-    "htmlRelativePath": "./src/public/index.html",
-    "fileRelativePath": "./src/public/fileReport.html"
+    "homeRelativePath": "./public/index.html",
+    "fileRelativePath": "./public/fileReport.html"
 }

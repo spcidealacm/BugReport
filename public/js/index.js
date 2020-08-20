@@ -30,3 +30,13 @@ document.getElementById("fileclick").addEventListener("click", () => {
         text: "test",
     });
 });
+
+$("#files-analysed .fileRepLink").click(function (event) {
+    event.preventDefault(); // prevent page reloading
+    document.getElementById("fileclick").click();
+});
+
+$(".fileRepLink1").click(function (event) {
+    event.preventDefault();
+    document.getElementById("fileclick").click();
+});

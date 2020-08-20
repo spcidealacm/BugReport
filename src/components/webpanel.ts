@@ -9,7 +9,7 @@ interface WebInfo {
     enableScripts: boolean;
     localResourceRoots: string[];
     retainContextWhenHidden: boolean;
-    htmlRelativePath: string;
+    homeRelativePath: string;
 }
 
 class WebPanel {
@@ -51,7 +51,7 @@ class WebPanel {
 
         this.setCleanupMethod(webPanel);
         this.setListener(webPanel);
-        this.setWebpage(webPanel, webInfo["htmlRelativePath"], context);
+        this.setWebpage(webPanel, webInfo["homeRelativePath"], context);
 
         return webPanel;
     }
@@ -79,7 +79,6 @@ class WebPanel {
      * @param webPanel Webpanel.
      */
     protected setCleanupMethod(webPanel: vscode.WebviewPanel) {
-        
         webPanel.onDidDispose(
             () => this.dispose(webPanel, this.disposables, this.webIsReady),
             null,

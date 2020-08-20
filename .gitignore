@@ -2,3 +2,5 @@ out
 node_modules
 .vscode-test/
 *.vsix
+web/Convent.html
+public/Convent.html
