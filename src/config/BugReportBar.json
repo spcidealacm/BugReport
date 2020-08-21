@@ -4,15 +4,15 @@
     "priority": 100,
     "command": "BugReport",
     "wait": {
-        "text": "$(beaker) Bug Report",
+        "text": "$(beaker) SVF ANALYSIS TOOLS",
         "color": "errorForeground"
     },
     "load": {
-        "text": "$(sync~spin) LOADING...",
+        "text": "$(sync~spin) SVF TOOLS LOADING...",
         "color": "inputValidation.warningBackground"
     },
     "ready": {
-        "text": "$(verified) Bug Report",
+        "text": "$(verified) SVF ANALYSIS TOOLS",
         "color": "activityBar.activeBorder"
     }
 }

@@ -1,7 +1,7 @@
 {
-    "name": "bugreport",
-    "displayName": "BugReport",
-    "description": "Analysis Online",
+    "name": "svftools",
+    "displayName": "SVF ANALYSIS TOOLS",
+    "description": "SVF ANALYSIS TOOLS",
     "icon": "img/icon.png",
     "version": "0.0.1",
     "publisher": "TianyangGuan",

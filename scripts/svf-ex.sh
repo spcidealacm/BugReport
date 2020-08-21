@@ -13,4 +13,8 @@ fi
 sudo mv ./bin/svf-ex /usr/bin/
 
 cd ..
-echo "THE WORK DONE."
+## warning
+function highlight(){
+    echo -e "\033[1;45;37m$1\033[0m"
+}
+highlight "[SVF ANALYSIS JOB DONE.]"
