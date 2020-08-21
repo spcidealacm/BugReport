@@ -1,0 +1,4 @@
+{
+    "env": "./src/scripts/env.sh",
+    "svf-ex": "./src/scripts/svf-ex.sh"
+}

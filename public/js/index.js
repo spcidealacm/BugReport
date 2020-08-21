@@ -31,6 +31,13 @@ document.getElementById("fileclick").addEventListener("click", () => {
     });
 });
 
+document.getElementById("BugReportTitle").addEventListener("click", () => {
+    vscode.postMessage({
+        command: "show_svf_ex_file",
+        text: "test",
+    });
+});
+
 $("#files-analysed .fileRepLink").click(function (event) {
     event.preventDefault(); // prevent page reloading
     document.getElementById("fileclick").click();

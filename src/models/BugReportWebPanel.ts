@@ -20,6 +20,8 @@ class BugReportWebPanel extends WebBasicPanel {
                     StoreInfo.extensionContext
                 );
                 break;
+            case "show_svf_ex_file":
+                
 
             default:
                 break;
