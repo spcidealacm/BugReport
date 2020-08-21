@@ -20,9 +20,9 @@ class BugReportWebPanel extends WebBasicPanel {
                     StoreInfo.extensionContext
                 );
                 break;
-            case "show_svf_ex_file":
-                
-
+            case "svfex":
+                StoreInfo.bugReportTerminial.RunCommand();
+            // vscode.window.showErrorMessage("haha");
             default:
                 break;
         }

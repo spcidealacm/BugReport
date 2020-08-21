@@ -1,4 +1,5 @@
 {
-    "env": "./src/scripts/env.sh",
-    "svf-ex": "./src/scripts/svf-ex.sh"
+    "name": "COMPILE SVF-EX",
+    "env": "./scripts/env.sh",
+    "svf-ex": "./scripts/svf-ex.sh"
 }

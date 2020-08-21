@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as bugInfo from "../config/BugReportBar.json";
 import { BasicCommand } from "../components/command";
-import { StoreInfo } from "../storeInfo";
+import { StoreInfo, ClearStore } from "../storeInfo";
 import { BarStatus } from "../models/BugReportBar";
 import { BugReportWebPanel } from "../models/BugReportWebPanel";
 
@@ -93,7 +93,8 @@ class BugReportCommand extends BasicCommand {
 
     protected runWhenReady() {
         StoreInfo.bugReportBar.setWait();
-        StoreInfo.bugReportWebPanel.deletePanel();
+        // StoreInfo.bugReportWebPanel.deletePanel();
+        ClearStore();
     }
 
     protected default() {

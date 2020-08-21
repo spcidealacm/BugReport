@@ -4,3 +4,4 @@ node_modules
 *.vsix
 web/Convent.html
 public/Convent.html
+SVF

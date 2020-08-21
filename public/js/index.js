@@ -31,12 +31,14 @@ document.getElementById("fileclick").addEventListener("click", () => {
     });
 });
 
-document.getElementById("BugReportTitle").addEventListener("click", () => {
-    vscode.postMessage({
-        command: "show_svf_ex_file",
-        text: "test",
+document
+    .getElementById("header-bugAnalysis-tab")
+    .addEventListener("click", () => {
+        vscode.postMessage({
+            command: "svfex",
+            text: "test",
+        });
     });
-});
 
 $("#files-analysed .fileRepLink").click(function (event) {
     event.preventDefault(); // prevent page reloading
