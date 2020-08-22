@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as webInfo from "../config/BugReportWeb.json";
 import { StoreInfo } from "../storeInfo";
 import { WebBasicPanel } from "../components/webpanel";
+import { BugReportTerminial } from "./BugReportTerminial";
 
 class BugReportWebPanel extends WebBasicPanel {
     constructor() {
@@ -21,6 +22,9 @@ class BugReportWebPanel extends WebBasicPanel {
                 );
                 break;
             case "svfex":
+                if (!StoreInfo.bugReportTerminial) {
+                    StoreInfo.bugReportTerminial = new BugReportTerminial();
+                }
                 StoreInfo.bugReportTerminial.RunCommand();
             // vscode.window.showErrorMessage("haha");
             default:

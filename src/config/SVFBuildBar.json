@@ -1,17 +1,19 @@
 {
     "name": "Build Svf-ex",
     "alignment": "right",
-    "priority": 100,
+
     "OpenConifg": {
         "command": "OpenConifg",
         "text": "$(files) OPEN SVF CONFIG",
         "color": "",
         "folder": "SVF-example",
-        "path": "src/svf-ex.cpp"
+        "path": "src/svf-ex.cpp",
+        "priority": 2
     },
     "BuildSvfEx": {
         "command": "BuildSvfEx",
         "text": "$(debug-start) BUILD SVF-EX",
-        "color": ""
+        "color": "",
+        "priority": 1
     }
 }

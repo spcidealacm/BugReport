@@ -9,10 +9,11 @@ enum SVFBarType {
 class SVFBuildBar extends BasicBar {
     protected command: string = "";
     protected text: string = "";
-    constructor(svfBarType: SVFBarType) {
+    constructor(svfBarType: SVFBarType, priprity?: number) {
         super(
             StoreInfo.extensionContext,
-            BasicBar.getAlignment(svfInfo.alignment)
+            BasicBar.getAlignment(svfInfo.alignment),
+            priprity
         );
         this.command = "";
         this.text = "";

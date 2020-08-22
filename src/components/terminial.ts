@@ -26,7 +26,7 @@ class Terminial {
     }
 
     public RemoveTerminial() {
-        this.terminial.dispose();
+        this.terminial?.dispose();
         this.existFlag = false;
     }
 }

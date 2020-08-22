@@ -6,6 +6,7 @@ import { StoreInfo } from "../storeInfo";
 import * as path from "path";
 import * as fs from "fs";
 import { setTimeout } from "timers";
+import { BugReportTerminial } from "./BugReportTerminial";
 
 class SVFBuildCommand extends BasicCommand {
     protected barType: SVFBarType | undefined;
@@ -69,6 +70,9 @@ class SVFBuildCommand extends BasicCommand {
         }
     }
     protected BuildSvfExCommand() {
+        if (!StoreInfo.bugReportTerminial) {
+            StoreInfo.bugReportTerminial = new BugReportTerminial();
+        }
         StoreInfo.bugReportTerminial.RunCommand();
     }
     private DownloadSVFLogic(filePath: string, info: string) {
@@ -92,7 +96,7 @@ class SVFBuildCommand extends BasicCommand {
         let extensionPath = StoreInfo.extensionContext.extensionPath;
         let bashfile = "./scripts/download.sh";
         let bashPath: string = path.join(extensionPath, bashfile);
-        let cli: string = `bash ${bashPath} ${extensionPath}`;
+        let cli: string = `bash ${bashPath}`;
         terminial.show();
         terminial.sendText(cli);
         let handel = setInterval(() => {

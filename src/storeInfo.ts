@@ -5,6 +5,7 @@ import { BugReportWebPanel } from "./models/BugReportWebPanel";
 import { BugReportTerminial } from "./models/BugReportTerminial";
 import { SVFBuildCommand } from "./models/SVFBuildCommand";
 import { SVFBarType, SVFBuildBar } from "./models/SVFBuildBar";
+import * as svfInfo from "./config/SVFBuildBar.json";
 
 class StoreInfo {
     private static _extensionContext: vscode.ExtensionContext;
@@ -76,13 +77,17 @@ function StartActive(context: vscode.ExtensionContext) {
     StoreInfo.extensionContext = context;
     StoreInfo.bugReportBar = new BugReportBar();
     StoreInfo.bugReportCommand = new BugReportCommand();
-    StoreInfo.bugReportTerminial = new BugReportTerminial();
+    // StoreInfo.bugReportTerminial = new BugReportTerminial();
     StoreInfo.svfOpenConfigCommand = new SVFBuildCommand(SVFBarType.OpenConifg);
     StoreInfo.svfBuildSvfExCommand = new SVFBuildCommand(SVFBarType.BuildSvfEx);
-    StoreInfo.svfOpenConfigBar = new SVFBuildBar(SVFBarType.OpenConifg);
-    StoreInfo.svfBuildSvfExBar = new SVFBuildBar(SVFBarType.BuildSvfEx);
-    // StoreInfo.svfOpenConfigBar.setShow(false);
-    // StoreInfo.svfBuildSvfExBar.setShow(false);
+    StoreInfo.svfOpenConfigBar = new SVFBuildBar(
+        SVFBarType.OpenConifg,
+        svfInfo.OpenConifg.priority
+    );
+    StoreInfo.svfBuildSvfExBar = new SVFBuildBar(
+        SVFBarType.BuildSvfEx,
+        svfInfo.BuildSvfEx.priority
+    );
 }
 
 function ClearStore() {
