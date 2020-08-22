@@ -86,7 +86,7 @@ class SVFBuildCommand extends BasicCommand {
                 case "NO":
                     return;
                 default:
-                    vscode.window.showErrorMessage("No Way to be here.");
+                    // vscode.window.showErrorMessage("No Way to be here.");
                     return;
             }
         });
