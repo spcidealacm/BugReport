@@ -17,4 +17,4 @@ cd ..
 function highlight(){
     echo -e "\033[1;45;37m$1\033[0m"
 }
-highlight "[SVF ANALYSIS JOB DONE.]"
+highlight "[COMPILE JOB DONE.]"
