@@ -1,7 +1,6 @@
 {
     "name": "Build Svf-ex",
     "alignment": "right",
-
     "OpenConifg": {
         "command": "OpenConifg",
         "text": "$(files) OPEN SVF CONFIG",

@@ -1,5 +1,6 @@
 {
     "name": "COMPILE SVF-EX",
     "env": "./scripts/env.sh",
-    "svf-ex": "./scripts/svf-ex.sh"
+    "svf-ex": "./scripts/svf-ex.sh",
+    "llvm_path": "/usr/bin/llvm"
 }

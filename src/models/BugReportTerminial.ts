@@ -3,6 +3,7 @@ import * as svfInfo from "../config/BugReportSVF.json";
 import { StoreInfo } from "../storeInfo";
 import { Terminial } from "../components/terminial";
 import * as path from "path";
+import * as fs from "fs";
 
 class BugReportTerminial extends Terminial {
     protected envPath: string = path.join(
@@ -21,6 +22,31 @@ class BugReportTerminial extends Terminial {
     }
 
     public RunCommand() {
+        if (!fs.existsSync(svfInfo.llvm_path)) {
+            let handle = vscode.window.showInformationMessage(
+                "Cannot recognize basic environment, do you want to config it first ?",
+                "YES",
+                "NO"
+            );
+            let selfThis = this;
+            handle.then(function (result) {
+                switch (result) {
+                    case "YES":
+                        selfThis.RunCommandBasic();
+                        break;
+                    case "NO":
+                        vscode.window.showInformationMessage(
+                            "Well, You could config by yourself or click the build button again."
+                        );
+                        return;
+                }
+            });
+        } else {
+            this.RunCommandBasic();
+        }
+    }
+
+    public RunCommandBasic() {
         if (!this.CheckStatus()) {
             this.CreateTerminial(svfInfo.name);
         }

@@ -109,6 +109,24 @@ class SVFBuildCommand extends BasicCommand {
             }
         }, 100);
     }
+
+    private DownloadLLVM(filePath: string) {
+        let terminial = vscode.window.createTerminal("CONFIG LLVM");
+        let extensionPath = StoreInfo.extensionContext.extensionPath;
+        let bashfile = "./scripts/llvm.sh";
+        let bashPath: string = path.join(extensionPath, bashfile);
+        let cli: string = `source ${bashPath}`;
+        terminial.show();
+        terminial.sendText(cli);
+        let handel = setInterval(() => {
+            if (fs.existsSync(filePath)) {
+                clearInterval(handel);
+                setTimeout(() => {
+                    terminial.dispose();
+                }, 2000);
+            }
+        }, 100);
+    }
 }
 
 export { SVFBuildCommand };
