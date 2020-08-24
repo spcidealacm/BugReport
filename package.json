@@ -29,7 +29,15 @@
                 "command": "BugReport",
                 "title": "BugReport"
             }
-        ]
+        ],
+        "views": {
+            "explorer": [
+                {
+                    "id": "svfbackend",
+                    "name": "SVF BACK-END"
+                }
+            ]
+        }
     },
     "scripts": {
         "vscode:prepublish": "yarn run compile",

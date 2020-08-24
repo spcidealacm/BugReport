@@ -10,6 +10,7 @@ import { BugReportTerminial } from "./BugReportTerminial";
 
 class SVFBuildCommand extends BasicCommand {
     protected barType: SVFBarType | undefined;
+    protected showFlag: boolean | undefined;
     constructor(barType: SVFBarType) {
         let command: string = "";
         switch (barType) {
@@ -26,6 +27,7 @@ class SVFBuildCommand extends BasicCommand {
         }
         super(StoreInfo.extensionContext, command);
         this.barType = barType;
+        this.showFlag = false;
     }
     protected exeCommand() {
         switch (this.barType) {
@@ -46,28 +48,53 @@ class SVFBuildCommand extends BasicCommand {
             vscode.window.showErrorMessage("Please open a folder.");
             return;
         }
-        let rootPath = vscode.workspace.rootPath;
+        // let rootPath = vscode.workspace.rootPath;
+        let extensionPath = StoreInfo.extensionContext.extensionPath;
         let folder = svfInfo.OpenConifg.folder;
         let file = svfInfo.OpenConifg.path;
 
-        let folderPath: string = path.join(rootPath, folder);
+        let folderPath: string = path.join(extensionPath, folder);
         let filePath: string = path.join(folderPath, file);
-
-        if (!fs.existsSync(filePath)) {
-            if (fs.existsSync(folderPath)) {
-                this.DownloadSVFLogic(
-                    filePath,
-                    "The key file is lost. Do you want to delete old folder and download new one?"
-                );
+        // console.log(this.showFlag);
+        if (this.showFlag) {
+            if (
+                vscode.window.activeTextEditor &&
+                vscode.window.activeTextEditor.document.fileName === filePath
+            ) {
+                vscode.window.activeTextEditor.hide();
+                this.showFlag = false;
             } else {
-                this.DownloadSVFLogic(
-                    filePath,
-                    "You don't have SVF-example folder. Do you want to download it?"
-                );
+                this.showText(filePath);
             }
         } else {
-            vscode.window.showTextDocument(vscode.Uri.file(filePath));
+            if (
+                vscode.window.activeTextEditor &&
+                vscode.window.activeTextEditor.document.fileName === filePath
+            ) {
+                vscode.window.showInformationMessage("SVF BACKEND OPENED");
+            }
+            if (!fs.existsSync(filePath)) {
+                if (fs.existsSync(folderPath)) {
+                    this.DownloadSVFLogic(
+                        folderPath,
+                        filePath,
+                        "The key file is lost. Do you want to delete old folder and download new one?"
+                    );
+                } else {
+                    this.DownloadSVFLogic(
+                        folderPath,
+                        filePath,
+                        "You don't have SVF-example folder. Do you want to download it?"
+                    );
+                }
+            } else {
+                this.showText(filePath);
+            }
         }
+    }
+    protected showText(filePath: string) {
+        vscode.window.showTextDocument(vscode.Uri.file(filePath));
+        this.showFlag = true;
     }
     protected BuildSvfExCommand() {
         if (!StoreInfo.bugReportTerminial) {
@@ -75,13 +102,17 @@ class SVFBuildCommand extends BasicCommand {
         }
         StoreInfo.bugReportTerminial.RunCommand();
     }
-    private DownloadSVFLogic(filePath: string, info: string) {
+    private DownloadSVFLogic(
+        folderPath: string,
+        filePath: string,
+        info: string
+    ) {
         let promise = vscode.window.showInformationMessage(info, "YES", "NO");
         let selfThis = this;
         promise.then(function (result) {
             switch (result) {
                 case "YES":
-                    selfThis.DownloadSVF(filePath);
+                    selfThis.DownloadSVF(folderPath, filePath);
                     break;
                 case "NO":
                     return;
@@ -91,17 +122,17 @@ class SVFBuildCommand extends BasicCommand {
             }
         });
     }
-    private DownloadSVF(filePath: string) {
+    private DownloadSVF(folderPath: string, filePath: string) {
         let terminial = vscode.window.createTerminal("DOWNLOAD SVF-EX");
         let extensionPath = StoreInfo.extensionContext.extensionPath;
-        let bashfile = "./scripts/download.sh";
+        let bashfile = `/scripts/download.sh ${folderPath}`;
         let bashPath: string = path.join(extensionPath, bashfile);
         let cli: string = `bash ${bashPath}`;
         terminial.show();
         terminial.sendText(cli);
         let handel = setInterval(() => {
             if (fs.existsSync(filePath)) {
-                vscode.window.showTextDocument(vscode.Uri.file(filePath));
+                this.showText(filePath);
                 clearInterval(handel);
                 setTimeout(() => {
                     terminial.dispose();
