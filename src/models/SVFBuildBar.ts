@@ -5,6 +5,7 @@ import * as svfInfo from "../config/SVFBuildBar.json";
 enum SVFBarType {
     OpenConifg,
     BuildSvfEx,
+    BuildTarget,
 }
 class SVFBuildBar extends BasicBar {
     protected command: string = "";
@@ -28,6 +29,10 @@ class SVFBuildBar extends BasicBar {
             case SVFBarType.BuildSvfEx:
                 this.command = svfInfo.BuildSvfEx.command;
                 this.text = svfInfo.BuildSvfEx.text;
+                break;
+            case SVFBarType.BuildTarget:
+                this.command = svfInfo.BuildTarget.command;
+                this.text = svfInfo.BuildTarget.text;
                 break;
             default:
                 this.command = svfInfo.OpenConifg.command;

@@ -1,24 +1,44 @@
 import * as vscode from "vscode";
 import * as svfInfo from "../config/BugReportSVF.json";
+import * as barInfo from "../config/SVFBuildBar.json";
+import * as targetInfo from "../config/BugRepoetTarget.json";
 import { StoreInfo } from "../storeInfo";
 import { Terminial } from "../components/terminial";
 import * as path from "path";
 import * as fs from "fs";
 
+enum CommandMode {
+    SVF,
+    TARGET,
+}
+
 class BugReportTerminial extends Terminial {
-    protected envPath: string = path.join(
+    public get name(): string {
+        return this._name;
+    }
+    protected envSvfPath: string = path.join(
         StoreInfo.extensionContext.extensionPath,
         svfInfo.env
     );
-    protected envCli: string = `source ${this.envPath} ${StoreInfo.extensionContext.extensionPath}`;
-    protected svfPath: string = path.join(
+    protected envTargetPath: string = path.join(
+        StoreInfo.extensionContext.extensionPath,
+        targetInfo.env
+    );
+    protected envSvfCli: string = `source ${this.envSvfPath} ${StoreInfo.extensionContext.extensionPath}`;
+    protected envTargetCli: string = `source ${this.envTargetPath}`;
+    protected svfScriptPath: string = path.join(
         StoreInfo.extensionContext.extensionPath,
         svfInfo["svf-ex"]
     );
-    protected svfCli: string = `bash ${this.svfPath}`;
+    protected targetScriptPath: string = path.join(
+        StoreInfo.extensionContext.extensionPath,
+        targetInfo.compile
+    );
+    protected svfCli: string = `bash ${this.svfScriptPath}`;
+    protected targetCli: string = `bash ${this.targetScriptPath} ${barInfo.BuildTarget.path}`;
     protected pwdCli: string = `cd ${vscode.workspace.rootPath}`;
-    constructor() {
-        super(svfInfo.name);
+    constructor(private _name: string, protected mode: CommandMode) {
+        super(_name);
     }
 
     public RunCommand() {
@@ -48,12 +68,23 @@ class BugReportTerminial extends Terminial {
 
     public RunCommandBasic() {
         if (!this.CheckStatus()) {
-            this.CreateTerminial(svfInfo.name);
+            this.CreateTerminial(this.name);
         }
         this.terminial.show();
-        this.terminial.sendText(this.envCli);
-        this.terminial.sendText(this.svfCli);
+
+        switch (this.mode) {
+            case CommandMode.SVF:
+                this.terminial.sendText(this.envSvfCli);
+                this.terminial.sendText(this.svfCli);
+                break;
+            case CommandMode.TARGET:
+                this.terminial.sendText(this.envTargetCli);
+                this.terminial.sendText(this.targetCli);
+                break;
+            default:
+                break;
+        }
     }
 }
 
-export { BugReportTerminial };
+export { CommandMode, BugReportTerminial };

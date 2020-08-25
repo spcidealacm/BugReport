@@ -5,7 +5,7 @@ import { BugReportWebPanel } from "./models/BugReportWebPanel";
 import { BugReportTerminial } from "./models/BugReportTerminial";
 import { SVFBuildCommand } from "./models/SVFBuildCommand";
 import { SVFBarType, SVFBuildBar } from "./models/SVFBuildBar";
-import * as svfInfo from "./config/SVFBuildBar.json";
+import * as BarInfo from "./config/SVFBuildBar.json";
 
 class StoreInfo {
     private static _extensionContext: vscode.ExtensionContext;
@@ -15,8 +15,11 @@ class StoreInfo {
     private static _bugReportTerminial: BugReportTerminial;
     private static _svfOpenConfigCommand: SVFBuildCommand;
     private static _svfBuildSvfExCommand: SVFBuildCommand;
+    private static _targetBuildCommand: SVFBuildCommand;
     private static _svfOpenConfigBar: SVFBuildBar;
     private static _svfBuildSvfExBar: SVFBuildBar;
+    private static _targetBuildBar: SVFBuildBar;
+
     public static get bugReportTerminial(): BugReportTerminial {
         return StoreInfo._bugReportTerminial;
     }
@@ -59,6 +62,12 @@ class StoreInfo {
     public static set svfBuildSvfExCommand(value: SVFBuildCommand) {
         StoreInfo._svfBuildSvfExCommand = value;
     }
+    public static get targetBuildCommand(): SVFBuildCommand {
+        return StoreInfo._targetBuildCommand;
+    }
+    public static set targetBuildCommand(value: SVFBuildCommand) {
+        StoreInfo._targetBuildCommand = value;
+    }
     public static get svfOpenConfigBar(): SVFBuildBar {
         return StoreInfo._svfOpenConfigBar;
     }
@@ -71,6 +80,12 @@ class StoreInfo {
     public static set svfBuildSvfExBar(value: SVFBuildBar) {
         StoreInfo._svfBuildSvfExBar = value;
     }
+    public static get targetBuildBar(): SVFBuildBar {
+        return StoreInfo._targetBuildBar;
+    }
+    public static set targetBuildBar(value: SVFBuildBar) {
+        StoreInfo._targetBuildBar = value;
+    }
 }
 
 function StartActive(context: vscode.ExtensionContext) {
@@ -80,13 +95,18 @@ function StartActive(context: vscode.ExtensionContext) {
     // StoreInfo.bugReportTerminial = new BugReportTerminial();
     StoreInfo.svfOpenConfigCommand = new SVFBuildCommand(SVFBarType.OpenConifg);
     StoreInfo.svfBuildSvfExCommand = new SVFBuildCommand(SVFBarType.BuildSvfEx);
+    StoreInfo.targetBuildCommand = new SVFBuildCommand(SVFBarType.BuildTarget);
     StoreInfo.svfOpenConfigBar = new SVFBuildBar(
         SVFBarType.OpenConifg,
-        svfInfo.OpenConifg.priority
+        BarInfo.OpenConifg.priority
     );
     StoreInfo.svfBuildSvfExBar = new SVFBuildBar(
         SVFBarType.BuildSvfEx,
-        svfInfo.BuildSvfEx.priority
+        BarInfo.BuildSvfEx.priority
+    );
+    StoreInfo.targetBuildBar = new SVFBuildBar(
+        SVFBarType.BuildTarget,
+        BarInfo.BuildTarget.priority
     );
 }
 

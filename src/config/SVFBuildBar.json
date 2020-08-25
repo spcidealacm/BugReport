@@ -1,6 +1,6 @@
 {
     "name": "Build Svf-ex",
-    "alignment": "right",
+    "alignment": "left",
     "OpenConifg": {
         "command": "OpenConifg",
         "text": "$(files) OPEN SVF BACKEND",
@@ -8,6 +8,14 @@
         "color": "",
         "folder": "svf-backend",
         "path": "src/svf-ex.cpp",
+        "priority": 3
+    },
+    "BuildTarget": {
+        "command": "BuildTarget",
+        "text": "$(debug-start) BUILD INPUT PROJECT",
+        "color": "",
+        "folder": "",
+        "path": "example.c",
         "priority": 2
     },
     "BuildSvfEx": {

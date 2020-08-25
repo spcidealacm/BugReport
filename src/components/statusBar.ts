@@ -36,6 +36,11 @@ class BasicBar {
         }
     }
 
+
+    public setText(text: string){
+        this.bar.text = text;
+    }
+
     public setShow(flag?: boolean) {
         if (flag === undefined || flag) {
             this.bar.show();
