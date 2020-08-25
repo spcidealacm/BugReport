@@ -1,20 +1,17 @@
-if [ ! -d "./SVF-example" ]; then
-    git clone https://github.com/SVF-tools/SVF-example.git
-fi
-
-cd SVF-example
+currentPath=$(pwd)
+cd $1
 
 cmake .
 make
 
-if [ -f /usr/bin/svf-ex  ]; then
+if [ -f /usr/bin/svf-ex ]; then
     sudo rm /usr/bin/svf-ex
 fi
 sudo mv ./bin/svf-ex /usr/bin/
 
-cd ..
+cd ${currentPath}
 ## warning
-function highlight(){
+function highlight() {
     echo -e "\033[1;45;37m$1\033[0m"
 }
 highlight "[COMPILE JOB DONE.]"

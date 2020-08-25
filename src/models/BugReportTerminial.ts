@@ -34,7 +34,11 @@ class BugReportTerminial extends Terminial {
         StoreInfo.extensionContext.extensionPath,
         targetInfo.compile
     );
-    protected svfCli: string = `bash ${this.svfScriptPath}`;
+    protected svfBackendPath = path.join(
+        StoreInfo.extensionContext.extensionPath,
+        barInfo.OpenConifg.folder
+    );
+    protected svfCli: string = `bash ${this.svfScriptPath} ${this.svfBackendPath}`;
     protected targetCli: string = `bash ${this.targetScriptPath} ${barInfo.BuildTarget.path}`;
     protected pwdCli: string = `cd ${vscode.workspace.rootPath}`;
     constructor(private _name: string, protected mode: CommandMode) {

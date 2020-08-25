@@ -1,11 +1,11 @@
-clang -c -g -fno-discard-value-names -emit-llvm $1 -o ${1%%.*}.bc
+clang -c -g -S -fno-discard-value-names -emit-llvm $1 -o ${1%%.*}.bc
 function highlight() {
     echo -e "\033[1;45;37m$1\033[0m"
 }
 function errorshow() {
     echo -e "\033[1;41;37m$1\033[0m"
 }
-folder="SVF_EX_COMPILE_RESULT"
+folder="Graph_Files"
 if [ -d ${folder} ]; then
     sudo rm -rf ${folder}
 fi

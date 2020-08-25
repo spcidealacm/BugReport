@@ -20,7 +20,7 @@
     },
     "BuildSvfEx": {
         "command": "BuildSvfEx",
-        "text": "$(debug-start) BUILD SVF-EX",
+        "text": "$(debug-start) BUILD SVF BACKEND",
         "color": "",
         "priority": 1
     }

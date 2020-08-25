@@ -13,6 +13,7 @@ class StoreInfo {
     private static _bugReportCommand: BugReportCommand;
     private static _bugReportWebPanel: BugReportWebPanel;
     private static _bugReportTerminial: BugReportTerminial;
+    private static _targetTerminial: BugReportTerminial;
     private static _svfOpenConfigCommand: SVFBuildCommand;
     private static _svfBuildSvfExCommand: SVFBuildCommand;
     private static _targetBuildCommand: SVFBuildCommand;
@@ -85,6 +86,12 @@ class StoreInfo {
     }
     public static set targetBuildBar(value: SVFBuildBar) {
         StoreInfo._targetBuildBar = value;
+    }
+    public static get targetTerminial(): BugReportTerminial {
+        return StoreInfo._targetTerminial;
+    }
+    public static set targetTerminial(value: BugReportTerminial) {
+        StoreInfo._targetTerminial = value;
     }
 }
 

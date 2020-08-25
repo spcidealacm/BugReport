@@ -163,19 +163,19 @@ class SVFBuildCommand extends BasicCommand {
         StoreInfo.bugReportTerminial.RunCommand();
     }
     protected BuildTargetCommand() {
-        if (!StoreInfo.bugReportTerminial) {
-            StoreInfo.bugReportTerminial = new BugReportTerminial(
+        if (!StoreInfo.targetTerminial) {
+            StoreInfo.targetTerminial = new BugReportTerminial(
                 targetInfo.name,
                 CommandMode.TARGET
             );
-        } else if (StoreInfo.bugReportTerminial.name !== targetInfo.name) {
-            StoreInfo.bugReportTerminial.RemoveTerminial();
-            StoreInfo.bugReportTerminial = new BugReportTerminial(
+        } else if (StoreInfo.targetTerminial.name !== targetInfo.name) {
+            StoreInfo.targetTerminial.RemoveTerminial();
+            StoreInfo.targetTerminial = new BugReportTerminial(
                 targetInfo.name,
                 CommandMode.TARGET
             );
         }
-        StoreInfo.bugReportTerminial.RunCommand();
+        StoreInfo.targetTerminial.RunCommand();
     }
     private DownloadSVFLogic(
         folderPath: string,
