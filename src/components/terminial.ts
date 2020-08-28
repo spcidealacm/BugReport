@@ -29,6 +29,10 @@ class Terminial {
         this.terminial?.dispose();
         this.existFlag = false;
     }
+
+    public cmd(cmd: string) {
+        this.terminial.sendText(cmd);
+    }
 }
 
 export { Terminial };

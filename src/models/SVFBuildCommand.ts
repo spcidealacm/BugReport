@@ -4,7 +4,7 @@ import * as svfInfo from "../config/BugReportSVF.json";
 import * as targetInfo from "../config/BugRepoetTarget.json";
 import { BasicCommand } from "../components/command";
 import { SVFBarType } from "./SVFBuildBar";
-import { StoreInfo } from "../storeInfo";
+import { StoreInfo, ChangeInputFileStatus } from "../storeInfo";
 import * as path from "path";
 import * as fs from "fs";
 import { setTimeout } from "timers";
@@ -67,14 +67,17 @@ class SVFBuildCommand extends BasicCommand {
         // let targetFolder: string = svfBarInfo.BuildTarget.path;
         let targetFile: string = svfBarInfo.BuildTarget.path;
         let targetPath: string = path.join(rootPath, targetFile);
-        // console.log(this.showFlag);
+
         if (this.showFlag) {
             if (
                 vscode.window.activeTextEditor &&
                 vscode.window.activeTextEditor.document.fileName === filePath
             ) {
                 this.hideText();
-                this.showTarget(targetPath);
+                if (this.checkFolder() === 2) {
+                    // in right folder
+                    this.showTarget(targetPath);
+                }
             } else {
                 this.showText(filePath);
             }
@@ -104,6 +107,7 @@ class SVFBuildCommand extends BasicCommand {
             }
         }
     }
+    protected ChangeInputFileStatus(status: boolean) {}
     protected showText(filePath: string) {
         vscode.window.showTextDocument(vscode.Uri.file(filePath));
         this.showFlag = true;
@@ -114,7 +118,33 @@ class SVFBuildCommand extends BasicCommand {
         this.showFlag = false;
         StoreInfo.svfOpenConfigBar.setText(svfBarInfo.OpenConifg.text);
     }
-    protected showTarget(filePath: string) {
+    public checkFolder(): number {
+        const USER_HOME = process.env.HOME || process.env.USERPROFILE;
+        if (!USER_HOME) {
+            console.log(`Cannot find USER_HOME: ${USER_HOME}`);
+            return -1;
+        }
+        const INPUT_PROJECT = path.join(USER_HOME, "INPUT_PROJECT");
+        console.log(INPUT_PROJECT);
+        if (!fs.existsSync(INPUT_PROJECT)) {
+            fs.mkdirSync(INPUT_PROJECT);
+        }
+        vscode.commands.getCommands().then(function (result) {
+            console.log(result);
+        });
+        const input_project_uri = vscode.Uri.file(INPUT_PROJECT);
+        if (vscode.workspace.rootPath !== INPUT_PROJECT) {
+            ChangeInputFileStatus(true);
+            vscode.commands.executeCommand(
+                "vscode.openFolder",
+                input_project_uri
+            );
+            return 1; // open folder
+        }
+        return 2; // in right folder
+    }
+    public showTarget(filePath: string) {
+        console.log("showTarget");
         if (fs.existsSync(filePath)) {
             vscode.window.showTextDocument(vscode.Uri.file(filePath));
         } else {

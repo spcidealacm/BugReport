@@ -6,6 +6,9 @@ import { BugReportTerminial } from "./models/BugReportTerminial";
 import { SVFBuildCommand } from "./models/SVFBuildCommand";
 import { SVFBarType, SVFBuildBar } from "./models/SVFBuildBar";
 import * as BarInfo from "./config/SVFBuildBar.json";
+import * as fs from "fs";
+import * as path from "path";
+import { exec } from "child_process";
 
 class StoreInfo {
     private static _extensionContext: vscode.ExtensionContext;
@@ -20,6 +23,13 @@ class StoreInfo {
     private static _svfOpenConfigBar: SVFBuildBar;
     private static _svfBuildSvfExBar: SVFBuildBar;
     private static _targetBuildBar: SVFBuildBar;
+    private static _OpenFixFlag: string = "./OpenFileFlag.json";
+    public static get OpenFixFlag(): string {
+        return StoreInfo._OpenFixFlag;
+    }
+    public static set OpenFixFlag(value: string) {
+        StoreInfo._OpenFixFlag = value;
+    }
 
     public static get bugReportTerminial(): BugReportTerminial {
         return StoreInfo._bugReportTerminial;
@@ -115,6 +125,40 @@ function StartActive(context: vscode.ExtensionContext) {
         SVFBarType.BuildTarget,
         BarInfo.BuildTarget.priority
     );
+    OpenFixFile();
+}
+
+function OpenFixFile() {
+    console.log("OpenFixFile");
+    let configPath = path.join(
+        StoreInfo.extensionContext.extensionPath,
+        StoreInfo.OpenFixFlag
+    );
+    if (fs.existsSync(configPath)) {
+        console.log("OpenFixFile");
+        let targetFile: string = BarInfo.BuildTarget.path;
+        let rootPath = vscode.workspace.rootPath;
+        if (!rootPath) {
+            return;
+        }
+        let targetPath: string = path.join(rootPath, targetFile);
+        StoreInfo.svfOpenConfigCommand.showTarget(targetPath);
+    }
+    ChangeInputFileStatus(false);
+}
+
+function ChangeInputFileStatus(status: boolean) {
+    console.log("status: ", status);
+    let configPath = path.join(
+        StoreInfo.extensionContext.extensionPath,
+        StoreInfo.OpenFixFlag
+    );
+    if (fs.existsSync(configPath) && !status) {
+        fs.unlinkSync(configPath);
+    } else if (!fs.existsSync(configPath) && status) {
+        let cmd = `touch ${configPath}`;
+        exec(cmd);
+    }
 }
 
 function ClearStore() {
@@ -128,4 +172,4 @@ function ClearStore() {
     // StoreInfo.svfBuildSvfExBar.setShow(false);
 }
 
-export { StoreInfo, StartActive, ClearStore };
+export { StoreInfo, StartActive, ClearStore, ChangeInputFileStatus };

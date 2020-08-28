@@ -36,8 +36,7 @@ class BasicBar {
         }
     }
 
-
-    public setText(text: string){
+    public setText(text: string) {
         this.bar.text = text;
     }
 

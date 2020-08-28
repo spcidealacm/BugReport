@@ -1,4 +1,3 @@
-clang -c -g -S -fno-discard-value-names -emit-llvm $1 -o ${1%%.*}.bc
 function highlight() {
     echo -e "\033[1;45;37m$1\033[0m"
 }
