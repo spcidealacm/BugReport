@@ -2,8 +2,9 @@ import * as vscode from "vscode";
 import { BugReportBar } from "./models/BugReportBar";
 import { BugReportCommand } from "./models/BugReportCommand";
 import { BugReportWebPanel } from "./models/BugReportWebPanel";
-import { BugReportTerminial } from "./models/BugReportTerminial";
+import { BugReportTerminal } from "./models/BugReportTerminal";
 import { SVFBuildCommand } from "./models/SVFBuildCommand";
+import { InstallEnvCommand } from "./models/InstallEnvCommand";
 import { SVFBarType, SVFBuildBar } from "./models/SVFBuildBar";
 import * as BarInfo from "./config/SVFBuildBar.json";
 import * as fs from "fs";
@@ -15,11 +16,12 @@ class StoreInfo {
     private static _bugReportBar: BugReportBar;
     private static _bugReportCommand: BugReportCommand;
     private static _bugReportWebPanel: BugReportWebPanel;
-    private static _bugReportTerminial: BugReportTerminial;
-    private static _targetTerminial: BugReportTerminial;
+    private static _bugReportTerminal: BugReportTerminal;
+    private static _targetTerminal: BugReportTerminal;
     private static _svfOpenConfigCommand: SVFBuildCommand;
     private static _svfBuildSvfExCommand: SVFBuildCommand;
     private static _targetBuildCommand: SVFBuildCommand;
+    private static _installEnvCommand: InstallEnvCommand;
     private static _svfOpenConfigBar: SVFBuildBar;
     private static _svfBuildSvfExBar: SVFBuildBar;
     private static _targetBuildBar: SVFBuildBar;
@@ -31,11 +33,11 @@ class StoreInfo {
         StoreInfo._OpenFixFlag = value;
     }
 
-    public static get bugReportTerminial(): BugReportTerminial {
-        return StoreInfo._bugReportTerminial;
+    public static get bugReportTerminal(): BugReportTerminal {
+        return StoreInfo._bugReportTerminal;
     }
-    public static set bugReportTerminial(value: BugReportTerminial) {
-        StoreInfo._bugReportTerminial = value;
+    public static set bugReportTerminal(value: BugReportTerminal) {
+        StoreInfo._bugReportTerminal = value;
     }
     public static get bugReportWebPanel(): BugReportWebPanel {
         return StoreInfo._bugReportWebPanel;
@@ -97,11 +99,17 @@ class StoreInfo {
     public static set targetBuildBar(value: SVFBuildBar) {
         StoreInfo._targetBuildBar = value;
     }
-    public static get targetTerminial(): BugReportTerminial {
-        return StoreInfo._targetTerminial;
+    public static get targetTerminal(): BugReportTerminal {
+        return StoreInfo._targetTerminal;
     }
-    public static set targetTerminial(value: BugReportTerminial) {
-        StoreInfo._targetTerminial = value;
+    public static set targetTerminal(value: BugReportTerminal) {
+        StoreInfo._targetTerminal = value;
+    }
+    public static get installEnvCommand(): InstallEnvCommand {
+        return StoreInfo._installEnvCommand;
+    }
+    public static set installEnvCommand(value: InstallEnvCommand) {
+        StoreInfo._installEnvCommand = value;
     }
 }
 
@@ -109,10 +117,11 @@ function StartActive(context: vscode.ExtensionContext) {
     StoreInfo.extensionContext = context;
     StoreInfo.bugReportBar = new BugReportBar();
     StoreInfo.bugReportCommand = new BugReportCommand();
-    // StoreInfo.bugReportTerminial = new BugReportTerminial();
+    // StoreInfo.bugReportTerminal = new BugReportTerminal();
     StoreInfo.svfOpenConfigCommand = new SVFBuildCommand(SVFBarType.OpenConifg);
     StoreInfo.svfBuildSvfExCommand = new SVFBuildCommand(SVFBarType.BuildSvfEx);
     StoreInfo.targetBuildCommand = new SVFBuildCommand(SVFBarType.BuildTarget);
+    StoreInfo.installEnvCommand = new InstallEnvCommand();
     StoreInfo.svfOpenConfigBar = new SVFBuildBar(
         SVFBarType.OpenConifg,
         BarInfo.OpenConifg.priority
@@ -162,8 +171,8 @@ function ChangeInputFileStatus(status: boolean) {
 }
 
 function ClearStore() {
-    if (StoreInfo.bugReportTerminial) {
-        StoreInfo.bugReportTerminial.RemoveTerminial();
+    if (StoreInfo.bugReportTerminal) {
+        StoreInfo.bugReportTerminal.RemoveTerminal();
     }
     if (StoreInfo.bugReportWebPanel) {
         StoreInfo.bugReportWebPanel.deletePanel();

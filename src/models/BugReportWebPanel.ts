@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as webInfo from "../config/BugReportWeb.json";
 import { StoreInfo } from "../storeInfo";
 import { WebBasicPanel } from "../components/webpanel";
-import { CommandMode, BugReportTerminial } from "./BugReportTerminial";
+import { CommandMode, BugReportTerminal } from "./BugReportTerminal";
 import * as svfInfo from "../config/SVFBuildBar.json";
 
 class BugReportWebPanel extends WebBasicPanel {
@@ -23,13 +23,13 @@ class BugReportWebPanel extends WebBasicPanel {
                 );
                 break;
             case "svfex":
-                if (!StoreInfo.bugReportTerminial) {
-                    StoreInfo.bugReportTerminial = new BugReportTerminial(
+                if (!StoreInfo.bugReportTerminal) {
+                    StoreInfo.bugReportTerminal = new BugReportTerminal(
                         svfInfo.name,
                         CommandMode.SVF
                     );
                 }
-                StoreInfo.bugReportTerminial.RunCommand();
+                StoreInfo.bugReportTerminal.RunCommand();
             // vscode.window.showErrorMessage("haha");
             default:
                 break;

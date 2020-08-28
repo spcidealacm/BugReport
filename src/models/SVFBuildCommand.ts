@@ -8,7 +8,7 @@ import { StoreInfo, ChangeInputFileStatus } from "../storeInfo";
 import * as path from "path";
 import * as fs from "fs";
 import { setTimeout } from "timers";
-import { CommandMode, BugReportTerminial } from "./BugReportTerminial";
+import { CommandMode, BugReportTerminal } from "./BugReportTerminal";
 import { exec, execSync } from "child_process";
 
 class SVFBuildCommand extends BasicCommand {
@@ -178,34 +178,34 @@ class SVFBuildCommand extends BasicCommand {
         }
     }
     protected BuildSvfExCommand() {
-        if (!StoreInfo.bugReportTerminial) {
-            StoreInfo.bugReportTerminial = new BugReportTerminial(
+        if (!StoreInfo.bugReportTerminal) {
+            StoreInfo.bugReportTerminal = new BugReportTerminal(
                 svfInfo.name,
                 CommandMode.SVF
             );
-        } else if (StoreInfo.bugReportTerminial.name !== svfInfo.name) {
-            StoreInfo.bugReportTerminial.RemoveTerminial();
-            StoreInfo.bugReportTerminial = new BugReportTerminial(
+        } else if (StoreInfo.bugReportTerminal.name !== svfInfo.name) {
+            StoreInfo.bugReportTerminal.RemoveTerminal();
+            StoreInfo.bugReportTerminal = new BugReportTerminal(
                 svfInfo.name,
                 CommandMode.SVF
             );
         }
-        StoreInfo.bugReportTerminial.RunCommand();
+        StoreInfo.bugReportTerminal.RunCommand();
     }
     protected BuildTargetCommand() {
-        if (!StoreInfo.targetTerminial) {
-            StoreInfo.targetTerminial = new BugReportTerminial(
+        if (!StoreInfo.targetTerminal) {
+            StoreInfo.targetTerminal = new BugReportTerminal(
                 targetInfo.name,
                 CommandMode.TARGET
             );
-        } else if (StoreInfo.targetTerminial.name !== targetInfo.name) {
-            StoreInfo.targetTerminial.RemoveTerminial();
-            StoreInfo.targetTerminial = new BugReportTerminial(
+        } else if (StoreInfo.targetTerminal.name !== targetInfo.name) {
+            StoreInfo.targetTerminal.RemoveTerminal();
+            StoreInfo.targetTerminal = new BugReportTerminal(
                 targetInfo.name,
                 CommandMode.TARGET
             );
         }
-        StoreInfo.targetTerminial.RunCommand();
+        StoreInfo.targetTerminal.RunCommand();
     }
     private DownloadSVFLogic(
         folderPath: string,
@@ -228,37 +228,37 @@ class SVFBuildCommand extends BasicCommand {
         });
     }
     private DownloadSVF(folderPath: string, filePath: string) {
-        let terminial = vscode.window.createTerminal("DOWNLOAD SVF-EX");
+        let terminal = vscode.window.createTerminal("DOWNLOAD SVF-EX");
         let extensionPath = StoreInfo.extensionContext.extensionPath;
-        let bashfile = `/scripts/download.sh ${folderPath}`;
+        let bashfile = `./scripts/download.sh ${folderPath}`;
         let bashPath: string = path.join(extensionPath, bashfile);
         let cli: string = `bash ${bashPath}`;
-        terminial.show();
-        terminial.sendText(cli);
+        terminal.show();
+        terminal.sendText(cli);
         let handel = setInterval(() => {
             if (fs.existsSync(filePath)) {
                 this.showText(filePath);
                 clearInterval(handel);
                 setTimeout(() => {
-                    terminial.dispose();
+                    terminal.dispose();
                 }, 2000);
             }
         }, 100);
     }
 
     private DownloadLLVM(filePath: string) {
-        let terminial = vscode.window.createTerminal("CONFIG LLVM");
+        let terminal = vscode.window.createTerminal("CONFIG LLVM");
         let extensionPath = StoreInfo.extensionContext.extensionPath;
         let bashfile = "./scripts/llvm.sh";
         let bashPath: string = path.join(extensionPath, bashfile);
         let cli: string = `source ${bashPath}`;
-        terminial.show();
-        terminial.sendText(cli);
+        terminal.show();
+        terminal.sendText(cli);
         let handel = setInterval(() => {
             if (fs.existsSync(filePath)) {
                 clearInterval(handel);
                 setTimeout(() => {
-                    terminial.dispose();
+                    terminal.dispose();
                 }, 2000);
             }
         }, 100);

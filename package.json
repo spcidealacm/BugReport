@@ -28,6 +28,10 @@
             {
                 "command": "BugReport",
                 "title": "BugReport"
+            },
+            {
+                "command": "AnalysisEnv",
+                "title": "INSTALL SVF TOOLS ENV"
             }
         ],
         "views": {

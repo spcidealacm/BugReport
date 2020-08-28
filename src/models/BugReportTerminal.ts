@@ -3,7 +3,7 @@ import * as svfInfo from "../config/BugReportSVF.json";
 import * as barInfo from "../config/SVFBuildBar.json";
 import * as targetInfo from "../config/BugRepoetTarget.json";
 import { StoreInfo } from "../storeInfo";
-import { Terminial } from "../components/terminial";
+import { Terminal } from "../components/terminal";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -12,7 +12,7 @@ enum CommandMode {
     TARGET,
 }
 
-class BugReportTerminial extends Terminial {
+class BugReportTerminal extends Terminal {
     public get name(): string {
         return this._name;
     }
@@ -72,18 +72,18 @@ class BugReportTerminial extends Terminial {
 
     public RunCommandBasic() {
         if (!this.CheckStatus()) {
-            this.CreateTerminial(this.name);
+            this.CreateTerminal(this.name);
         }
-        this.terminial.show();
+        this.terminal.show();
 
         switch (this.mode) {
             case CommandMode.SVF:
-                this.terminial.sendText(this.envSvfCli);
-                this.terminial.sendText(this.svfCli);
+                this.terminal.sendText(this.envSvfCli);
+                this.terminal.sendText(this.svfCli);
                 break;
             case CommandMode.TARGET:
-                this.terminial.sendText(this.envTargetCli);
-                this.terminial.sendText(this.targetCli);
+                this.terminal.sendText(this.envTargetCli);
+                this.terminal.sendText(this.targetCli);
                 break;
             default:
                 break;
@@ -91,4 +91,4 @@ class BugReportTerminial extends Terminial {
     }
 }
 
-export { CommandMode, BugReportTerminial };
+export { CommandMode, BugReportTerminal };
