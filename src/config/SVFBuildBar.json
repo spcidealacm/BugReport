@@ -23,5 +23,11 @@
         "text": "$(debug-start) BUILD SVF BACKEND",
         "color": "",
         "priority": 1
+    },
+    "InstallEnv": {
+        "command": "AnalysisEnv",
+        "text": "$(extensions) INSTALL SVF ENVIRONMENT",
+        "color": "",
+        "priority": 4
     }
 }

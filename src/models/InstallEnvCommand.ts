@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { StoreInfo } from "../storeInfo";
+import { StoreInfo, CheckEnv } from "../storeInfo";
 import * as installEnv from "../config/Install_ENV.json";
 import * as svfBarInfo from "../config/SVFBuildBar.json";
 import { BasicCommand } from "../components/command";

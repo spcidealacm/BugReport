@@ -53,20 +53,12 @@ class SVFBuildCommand extends BasicCommand {
         }
     }
     protected OpenConfigCommand() {
-        if (!vscode.workspace.rootPath) {
-            vscode.window.showErrorMessage("Please open a folder.");
-            return;
-        }
-        let rootPath = vscode.workspace.rootPath;
         let extensionPath = StoreInfo.extensionContext.extensionPath;
         let folder = svfBarInfo.OpenConifg.folder;
         let file = svfBarInfo.OpenConifg.path;
 
         let folderPath: string = path.join(extensionPath, folder);
         let filePath: string = path.join(folderPath, file);
-        // let targetFolder: string = svfBarInfo.BuildTarget.path;
-        let targetFile: string = svfBarInfo.BuildTarget.path;
-        let targetPath: string = path.join(rootPath, targetFile);
 
         if (this.showFlag) {
             if (
@@ -75,7 +67,17 @@ class SVFBuildCommand extends BasicCommand {
             ) {
                 this.hideText();
                 if (this.checkFolder() === 2) {
-                    // in right folder
+                    const USER_HOME =
+                        process.env.HOME || process.env.USERPROFILE;
+                    if (!USER_HOME) {
+                        console.log(`Cannot find USER_HOME: ${USER_HOME}`);
+                        return -1;
+                    }
+                    const INPUT_PROJECT = path.join(USER_HOME, "INPUT_PROJECT");
+                    const targetPath = path.join(
+                        INPUT_PROJECT,
+                        svfBarInfo.BuildTarget.path
+                    );
                     this.showTarget(targetPath);
                 }
             } else {

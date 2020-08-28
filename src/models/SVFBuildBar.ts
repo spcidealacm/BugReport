@@ -6,6 +6,7 @@ enum SVFBarType {
     OpenConifg,
     BuildSvfEx,
     BuildTarget,
+    InstallEnv,
 }
 class SVFBuildBar extends BasicBar {
     protected command: string = "";
@@ -33,6 +34,10 @@ class SVFBuildBar extends BasicBar {
             case SVFBarType.BuildTarget:
                 this.command = svfInfo.BuildTarget.command;
                 this.text = svfInfo.BuildTarget.text;
+                break;
+            case SVFBarType.InstallEnv:
+                this.command = svfInfo.InstallEnv.command;
+                this.text = svfInfo.InstallEnv.text;
                 break;
             default:
                 this.command = svfInfo.OpenConifg.command;

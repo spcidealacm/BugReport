@@ -25,6 +25,13 @@ class StoreInfo {
     private static _svfOpenConfigBar: SVFBuildBar;
     private static _svfBuildSvfExBar: SVFBuildBar;
     private static _targetBuildBar: SVFBuildBar;
+    private static _installEnvBar: SVFBuildBar;
+    public static get installEnvBar(): SVFBuildBar {
+        return StoreInfo._installEnvBar;
+    }
+    public static set installEnvBar(value: SVFBuildBar) {
+        StoreInfo._installEnvBar = value;
+    }
     private static _OpenFixFlag: string = "./OpenFileFlag.json";
     public static get OpenFixFlag(): string {
         return StoreInfo._OpenFixFlag;
@@ -134,7 +141,45 @@ function StartActive(context: vscode.ExtensionContext) {
         SVFBarType.BuildTarget,
         BarInfo.BuildTarget.priority
     );
+    StoreInfo.installEnvBar = new SVFBuildBar(
+        SVFBarType.InstallEnv,
+        BarInfo.InstallEnv.priority
+    );
     OpenFixFile();
+    SetBar();
+    setInterval(() => {
+        SetBar();
+    }, 1000);
+    // getCommand();
+}
+
+function SetBar() {
+    if (CheckEnv()) {
+        StoreInfo.installEnvBar.setShow(false);
+        StoreInfo.svfOpenConfigBar.setShow(true);
+        StoreInfo.svfBuildSvfExBar.setShow(true);
+        StoreInfo.targetBuildBar.setShow(true);
+        StoreInfo.bugReportBar.setShow(true);
+    } else {
+        StoreInfo.installEnvBar.setShow(true);
+        StoreInfo.svfOpenConfigBar.setShow(false);
+        StoreInfo.svfBuildSvfExBar.setShow(false);
+        StoreInfo.targetBuildBar.setShow(false);
+        StoreInfo.bugReportBar.setShow(false);
+    }
+}
+
+function getCommand() {
+    vscode.commands.getCommands().then(function (results) {
+        console.log(results);
+        if (!vscode.workspace.rootPath) {
+            return;
+        }
+        let logPath = path.join(vscode.workspace.rootPath, "getCommand.log");
+        results.forEach(function (result) {
+            fs.appendFileSync(logPath, result + "\n");
+        });
+    });
 }
 
 function OpenFixFile() {
@@ -154,6 +199,26 @@ function OpenFixFile() {
         StoreInfo.svfOpenConfigCommand.showTarget(targetPath);
     }
     ChangeInputFileStatus(false);
+}
+
+function CheckEnv() {
+    let svf_backend = path.join(
+        StoreInfo.extensionContext.extensionPath,
+        BarInfo.OpenConifg.folder
+    );
+    if (
+        Check("/usr/bin/llvm") &&
+        Check("/usr/bin/svf-ex") &&
+        Check("/usr/bin/svf-graph") &&
+        Check(svf_backend)
+    ) {
+        return true;
+    }
+    return false;
+}
+
+function Check(path: string) {
+    return fs.existsSync(path);
 }
 
 function ChangeInputFileStatus(status: boolean) {
@@ -181,4 +246,4 @@ function ClearStore() {
     // StoreInfo.svfBuildSvfExBar.setShow(false);
 }
 
-export { StoreInfo, StartActive, ClearStore, ChangeInputFileStatus };
+export { StoreInfo, StartActive, ClearStore, ChangeInputFileStatus, CheckEnv };
