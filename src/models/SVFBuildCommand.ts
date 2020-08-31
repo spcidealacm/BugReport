@@ -10,6 +10,7 @@ import * as fs from "fs";
 import { setTimeout } from "timers";
 import { CommandMode, BugReportTerminal } from "./BugReportTerminal";
 import { exec, execSync } from "child_process";
+import * as folderInfo from "../config/FolderInfo.json";
 
 class SVFBuildCommand extends BasicCommand {
     protected barType: SVFBarType | undefined;
@@ -66,14 +67,17 @@ class SVFBuildCommand extends BasicCommand {
                 vscode.window.activeTextEditor.document.fileName === filePath
             ) {
                 this.hideText();
-                if (this.checkFolder() === 2) {
+                if (this.checkFolder(StoreInfo.OpenTargetFlag) === 2) {
                     const USER_HOME =
                         process.env.HOME || process.env.USERPROFILE;
                     if (!USER_HOME) {
                         console.log(`Cannot find USER_HOME: ${USER_HOME}`);
                         return -1;
                     }
-                    const INPUT_PROJECT = path.join(USER_HOME, "INPUT_PROJECT");
+                    const INPUT_PROJECT = path.join(
+                        USER_HOME,
+                        folderInfo.FolderPath
+                    );
                     const targetPath = path.join(
                         INPUT_PROJECT,
                         svfBarInfo.BuildTarget.path
@@ -81,6 +85,7 @@ class SVFBuildCommand extends BasicCommand {
                     this.showTarget(targetPath);
                 }
             } else {
+                this.checkFolder(StoreInfo.OpenBackEndFlag);
                 this.showText(filePath);
             }
         } else {
@@ -105,12 +110,12 @@ class SVFBuildCommand extends BasicCommand {
                     );
                 }
             } else {
+                this.checkFolder(StoreInfo.OpenBackEndFlag);
                 this.showText(filePath);
             }
         }
     }
-    protected ChangeInputFileStatus(status: boolean) {}
-    protected showText(filePath: string) {
+    public showText(filePath: string) {
         vscode.window.showTextDocument(vscode.Uri.file(filePath));
         this.showFlag = true;
         StoreInfo.svfOpenConfigBar.setText(svfBarInfo.OpenConifg.text2);
@@ -120,7 +125,7 @@ class SVFBuildCommand extends BasicCommand {
         this.showFlag = false;
         StoreInfo.svfOpenConfigBar.setText(svfBarInfo.OpenConifg.text);
     }
-    public checkFolder(): number {
+    public checkFolder(flagFile: string): number {
         const USER_HOME = process.env.HOME || process.env.USERPROFILE;
         if (!USER_HOME) {
             console.log(`Cannot find USER_HOME: ${USER_HOME}`);
@@ -136,7 +141,7 @@ class SVFBuildCommand extends BasicCommand {
         });
         const input_project_uri = vscode.Uri.file(INPUT_PROJECT);
         if (vscode.workspace.rootPath !== INPUT_PROJECT) {
-            ChangeInputFileStatus(true);
+            ChangeInputFileStatus(true, flagFile);
             vscode.commands.executeCommand(
                 "vscode.openFolder",
                 input_project_uri
@@ -209,7 +214,7 @@ class SVFBuildCommand extends BasicCommand {
         }
         StoreInfo.targetTerminal.RunCommand();
     }
-    private DownloadSVFLogic(
+    public DownloadSVFLogic(
         folderPath: string,
         filePath: string,
         info: string

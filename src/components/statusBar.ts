@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 
 class BasicBar {
     protected readonly bar: vscode.StatusBarItem;
+    protected barShowStatus: boolean = false;
     constructor(
         context: vscode.ExtensionContext,
         alignment?: vscode.StatusBarAlignment,
@@ -43,8 +44,10 @@ class BasicBar {
     public setShow(flag?: boolean) {
         if (flag === undefined || flag) {
             this.bar.show();
+            this.barShowStatus = true;
         } else {
             this.bar.hide();
+            this.barShowStatus = false;
         }
     }
 }

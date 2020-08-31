@@ -10,6 +10,7 @@ import * as BarInfo from "./config/SVFBuildBar.json";
 import * as fs from "fs";
 import * as path from "path";
 import { exec } from "child_process";
+import * as folderInfo from "./config/FolderInfo.json";
 
 class StoreInfo {
     private static _extensionContext: vscode.ExtensionContext;
@@ -32,12 +33,19 @@ class StoreInfo {
     public static set installEnvBar(value: SVFBuildBar) {
         StoreInfo._installEnvBar = value;
     }
-    private static _OpenFixFlag: string = "./OpenFileFlag.json";
-    public static get OpenFixFlag(): string {
-        return StoreInfo._OpenFixFlag;
+    private static _OpenTargetFlag: string = "./OpenTargetFlag.json";
+    private static _OpenBackEndFlag: string = "./OpenBackEndFlag.json";
+    public static get OpenBackEndFlag(): string {
+        return StoreInfo._OpenBackEndFlag;
     }
-    public static set OpenFixFlag(value: string) {
-        StoreInfo._OpenFixFlag = value;
+    public static set OpenBackEndFlag(value: string) {
+        StoreInfo._OpenBackEndFlag = value;
+    }
+    public static get OpenTargetFlag(): string {
+        return StoreInfo._OpenTargetFlag;
+    }
+    public static set OpenTargetFlag(value: string) {
+        StoreInfo._OpenTargetFlag = value;
     }
 
     public static get bugReportTerminal(): BugReportTerminal {
@@ -145,7 +153,8 @@ function StartActive(context: vscode.ExtensionContext) {
         SVFBarType.InstallEnv,
         BarInfo.InstallEnv.priority
     );
-    OpenFixFile();
+    OpenTargetFile();
+    OpenBackEndFile();
     SetBar();
     setInterval(() => {
         SetBar();
@@ -157,9 +166,27 @@ function SetBar() {
     if (CheckEnv()) {
         StoreInfo.installEnvBar.setShow(false);
         StoreInfo.svfOpenConfigBar.setShow(true);
-        StoreInfo.svfBuildSvfExBar.setShow(true);
-        StoreInfo.targetBuildBar.setShow(true);
-        StoreInfo.bugReportBar.setShow(true);
+        if (CheckWorkSpace()) {
+            if (CheckBackEnd()) {
+                StoreInfo.svfBuildSvfExBar.setShow(true);
+            } else {
+                StoreInfo.svfBuildSvfExBar.setShow(false);
+            }
+            if (CheckCFile()) {
+                StoreInfo.targetBuildBar.setShow(true);
+            } else {
+                StoreInfo.targetBuildBar.setShow(false);
+            }
+            if (CheckBcFile()) {
+                StoreInfo.bugReportBar.setShow(true);
+            } else {
+                StoreInfo.bugReportBar.setShow(false);
+            }
+        } else {
+            StoreInfo.svfBuildSvfExBar.setShow(false);
+            StoreInfo.targetBuildBar.setShow(false);
+            StoreInfo.bugReportBar.setShow(false);
+        }
     } else {
         StoreInfo.installEnvBar.setShow(true);
         StoreInfo.svfOpenConfigBar.setShow(false);
@@ -167,6 +194,59 @@ function SetBar() {
         StoreInfo.targetBuildBar.setShow(false);
         StoreInfo.bugReportBar.setShow(false);
     }
+}
+
+function CheckBackEnd(): boolean {
+    const backendFolder = path.join(
+        StoreInfo.extensionContext.extensionPath,
+        BarInfo.OpenConifg.folder
+    );
+    const backendFile = path.join(backendFolder, BarInfo.OpenConifg.path);
+    if (fs.existsSync(backendFolder) && fs.existsSync(backendFile)) {
+        return true;
+    }
+    return false;
+}
+
+function CheckCFile(): boolean {
+    const USER_HOME = process.env.HOME || process.env.USERPROFILE;
+    if (!USER_HOME) {
+        console.log(`Cannot find USER_HOME: ${USER_HOME}`);
+        return false;
+    }
+    const INPUT_PROJECT = path.join(USER_HOME, folderInfo.FolderPath);
+    const resultPath = path.join(INPUT_PROJECT, BarInfo.BuildTarget.path);
+    if (fs.existsSync(resultPath)) {
+        return true;
+    }
+    return false;
+}
+
+function CheckBcFile(): boolean {
+    const USER_HOME = process.env.HOME || process.env.USERPROFILE;
+    if (!USER_HOME) {
+        console.log(`Cannot find USER_HOME: ${USER_HOME}`);
+        return false;
+    }
+    const INPUT_PROJECT = path.join(USER_HOME, folderInfo.FolderPath);
+    const resultPath = path.join(INPUT_PROJECT, BarInfo.BuildTarget.resultPath);
+    if (fs.existsSync(resultPath)) {
+        return true;
+    }
+    return false;
+}
+
+function CheckWorkSpace(): boolean {
+    const USER_HOME = process.env.HOME || process.env.USERPROFILE;
+    if (!USER_HOME) {
+        console.log(`Cannot find USER_HOME: ${USER_HOME}`);
+        return false;
+    }
+    const INPUT_PROJECT = path.join(USER_HOME, folderInfo.FolderPath);
+    if (vscode.workspace.rootPath === INPUT_PROJECT) {
+        return true;
+    }
+    return false;
 }
 
 function getCommand() {
@@ -182,14 +262,12 @@ function getCommand() {
     });
 }
 
-function OpenFixFile() {
-    console.log("OpenFixFile");
+function OpenTargetFile() {
     let configPath = path.join(
         StoreInfo.extensionContext.extensionPath,
-        StoreInfo.OpenFixFlag
+        StoreInfo.OpenTargetFlag
     );
     if (fs.existsSync(configPath)) {
-        console.log("OpenFixFile");
         let targetFile: string = BarInfo.BuildTarget.path;
         let rootPath = vscode.workspace.rootPath;
         if (!rootPath) {
@@ -198,7 +276,40 @@ function OpenFixFile() {
         let targetPath: string = path.join(rootPath, targetFile);
         StoreInfo.svfOpenConfigCommand.showTarget(targetPath);
     }
-    ChangeInputFileStatus(false);
+    ChangeInputFileStatus(false, StoreInfo.OpenTargetFlag);
+}
+
+function OpenBackEndFile() {
+    let configPath = path.join(
+        StoreInfo.extensionContext.extensionPath,
+        StoreInfo.OpenBackEndFlag
+    );
+    if (fs.existsSync(configPath)) {
+        let extensionPath = StoreInfo.extensionContext.extensionPath;
+        let folder = BarInfo.OpenConifg.folder;
+        let file = BarInfo.OpenConifg.path;
+
+        let folderPath: string = path.join(extensionPath, folder);
+        let filePath: string = path.join(folderPath, file);
+        if (!fs.existsSync(filePath)) {
+            if (fs.existsSync(folderPath)) {
+                StoreInfo.svfOpenConfigCommand.DownloadSVFLogic(
+                    folderPath,
+                    filePath,
+                    "The key file is lost. Do you want to delete old folder and download new one?"
+                );
+            } else {
+                StoreInfo.svfOpenConfigCommand.DownloadSVFLogic(
+                    folderPath,
+                    filePath,
+                    "You don't have SVF-example folder. Do you want to download it?"
+                );
+            }
+        } else {
+            StoreInfo.svfOpenConfigCommand.showText(filePath);
+        }
+    }
+    ChangeInputFileStatus(false, StoreInfo.OpenTargetFlag);
 }
 
 function CheckEnv() {
@@ -221,11 +332,11 @@ function Check(path: string) {
     return fs.existsSync(path);
 }
 
-function ChangeInputFileStatus(status: boolean) {
-    console.log("status: ", status);
+function ChangeInputFileStatus(status: boolean, flagFile: string) {
+    console.log("status: ");
     let configPath = path.join(
         StoreInfo.extensionContext.extensionPath,
-        StoreInfo.OpenFixFlag
+        flagFile
     );
     if (fs.existsSync(configPath) && !status) {
         fs.unlinkSync(configPath);
@@ -242,8 +353,6 @@ function ClearStore() {
     if (StoreInfo.bugReportWebPanel) {
         StoreInfo.bugReportWebPanel.deletePanel();
     }
-    // StoreInfo.svfOpenConfigBar.setShow(false);
-    // StoreInfo.svfBuildSvfExBar.setShow(false);
 }
 
 export { StoreInfo, StartActive, ClearStore, ChangeInputFileStatus, CheckEnv };

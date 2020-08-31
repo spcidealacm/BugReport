@@ -26,12 +26,12 @@
     "contributes": {
         "commands": [
             {
-                "command": "BugReport",
-                "title": "BugReport"
-            },
-            {
                 "command": "AnalysisEnv",
-                "title": "INSTALL SVF TOOLS ENV"
+                "title": "INSTALL SVF TOOLS ENV",
+                "icon": {
+                    "light": "$(extensions)",
+                    "dark": "$(extensions)"
+                }
             }
         ],
         "views": {

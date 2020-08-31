@@ -16,6 +16,7 @@
         "color": "",
         "folder": "",
         "path": "example.c",
+        "resultPath": "example.bc",
         "priority": 2
     },
     "BuildSvfEx": {
