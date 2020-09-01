@@ -17,8 +17,8 @@ fi
 #######
 clang -c -g -fno-discard-value-names -emit-llvm $1 -o ${1%%.*}.bc
 
-svf-ex ${1%%.*}.bc >${1%%.*}.log
-rm ${1%%.*}.bc
+svf-ex ${1%%.*}.bc
+# rm ${1%%.*}.bc
 if [ -d 3D_CODE_GRAPH ]; then
     rm 3D_CODE_GRAPH -rf
 fi
@@ -96,8 +96,7 @@ finialData = codecs.decode(jsonData, "unicode_escape")
 # print(finialData)
     # sys.stdout.write("%s,\n" % (json.dumps(file)))
 with open(sys.argv[2], "w") as outfile:
-    outfile.write(finialData)
-    print(f"[Generate] {sys.argv[2]}: Done.")' >${filepath}/Dot2Json.py
+    outfile.write(finialData)' >${filepath}/Dot2Json.py
 
 #######
 #4. generate graph files

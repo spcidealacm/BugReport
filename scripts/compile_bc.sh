@@ -18,6 +18,9 @@ if [ -f ${1%%.*}.bc ]; then
     mv *.dot ./${folder}/
     mkdir ${Log}
     mv *.log ./${Log}/
+    svf-graph ${1%%.*}.c
+    mv ./3D_CODE_GRAPH/* ./${folder}/
+    rm -rf 3D_CODE_GRAPH
     highlight "[COMPILE JOB DONE.]"
 else
     errorshow "[COMPILE JOB ERROR.]"
